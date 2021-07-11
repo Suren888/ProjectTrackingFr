@@ -1,0 +1,8 @@
+<h1>project list</h1>
+<ul class="list-group">
+  <li *ngFor="let project of projects" class="list-group-item">
+    <span class="close" (click)="onDelete(project.id)">x</span>
+    <span (click)="editClick(project.id);" class="project_title">{{project.title}}</span>
+  </li>  
+</ul>
+<button (click)="addClick();" class="add_button btn btn-success">Add</button>

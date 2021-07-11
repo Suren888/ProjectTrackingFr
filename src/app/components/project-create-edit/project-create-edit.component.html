@@ -1,5 +1,4 @@
-{{ project | json }}
-
+<!-- {{ project | json }} -->
 <h2 *ngIf="isAddMode">Add Project</h2>
 <h2 *ngIf="!isAddMode">Edit Project</h2>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -7,7 +6,7 @@
         <div class="form-group col-12">
             <label>1.1 Project Title*</label>
             <input 
-              [(ngModel)]="project.title"
+              [(ngModel)]="project && project.title"
               type="text" formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
             <div  class="invalid-feedback">
                 <div>Title is required</div>
@@ -21,12 +20,10 @@
           [(ngModel)]="project.status"
           class="form-control" 
           [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
-            <option value=""></option>
             <option 
               *ngFor="let status of statusList" 
               value={{status.id}}
-              selected="status.name === project.status.name ? true : null"
-              >
+              [selected]="status.id == project.status.id || status.name == project.status.name">
                 {{status.name}}
           </option>              
           </select>

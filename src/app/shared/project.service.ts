@@ -32,13 +32,12 @@ export class ProjectService {
         .catch(this.errorHandler);  
   }
 
-  putProject(project: Project){
-    debugger
+  putProject(project: Project){     
     return this._http.put<Project>(`${this.appUrl}update/${project.id}`, project);
   }
 
   postProject(project: Project){
-    return this._http.post<Project>(`${this.appUrl}create)`, project);
+    return this._http.post<Project>(`${this.appUrl}create`, project);
   }
 
   errorHandler(error: Response) {  

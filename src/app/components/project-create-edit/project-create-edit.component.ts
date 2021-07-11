@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators,FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Project } from '../../shared/project.model';
 import { Status } from '../../shared/status.model';
-import { Contact } from '../../shared/contact.model'
 
 import { ProjectService } from '../../shared/project.service';
 
@@ -14,8 +13,6 @@ import { ProjectService } from '../../shared/project.service';
   providers: [ProjectService]
 
 })
-
-
 
 export class ProjectCreateEditComponent implements OnInit {
 
@@ -43,16 +40,14 @@ export class ProjectCreateEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService) { 
-      this.project = this.defProject
-      this.createForm()
+    private projectService: ProjectService) {      
   }
 
   createForm() {
     this.form = this.formBuilder.group({
       id:[this.project.id],
       title: [this.project.title, Validators.required ],
-      status: [this.project.status, Validators.required ],
+      status: [this.project.status.id, Validators.required ],
       contactsFormArr: this.getContactsFormArr()     
    });
    
@@ -105,9 +100,10 @@ export class ProjectCreateEditComponent implements OnInit {
         this.project = x;
         this.createForm();
         this.form.patchValue(x)
-      });  //.subscribe(x => this.form.patchValue(x));
+      });
     }else {
       this.project = this.defProject
+      this.createForm();
     }
 
     this.projectService.getStatusList().subscribe(x => this.statusList = x); 
@@ -115,8 +111,10 @@ export class ProjectCreateEditComponent implements OnInit {
 
   onSubmit(){
     console.log(this.form);
-    console.log(this.form.controls.title.errors.required);
-    
+    let optionID = this.project.status.hasOwnProperty('id') ? 
+    this.project.status.id : +this.project.status;
+    this.project.status = this.statusList.find(item => item.id == optionID)
+    console.log(this.project.status);    
     if(this.isAddMode){
       this.projectService.postProject(this.project).subscribe(a=>console.log(a));
     }else{

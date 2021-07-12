@@ -5,6 +5,7 @@ import { Project } from '../../shared/project.model';
 import { Status } from '../../shared/status.model';
 
 import { ProjectService } from '../../shared/project.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-create-edit',
@@ -23,7 +24,7 @@ export class ProjectCreateEditComponent implements OnInit {
   isAddMode: boolean;
   defProject:Project = {
     id:0,
-    title:'',
+    title:null,
     contacts:[{
       id:0,
       fullName:'',
@@ -61,7 +62,7 @@ export class ProjectCreateEditComponent implements OnInit {
     this.contactsFormArr.push(this.formBuilder.group({
       id:[0],
       fullName: ['', Validators.required ],
-      email: ['', Validators.required ],
+      email: ['', Validators.required, Validators.email ],
       phone: ['']
     }))
     this.project.contacts.push({
@@ -83,7 +84,7 @@ export class ProjectCreateEditComponent implements OnInit {
         this.formBuilder.group({
           id: [contact.id],
           fullName: [contact.fullName, Validators.required ],
-          email: [contact.email, Validators.required ],
+          email: [contact.email, [Validators.required, Validators.email]],
           phone: [contact.phone]
         })
       );
@@ -116,9 +117,20 @@ export class ProjectCreateEditComponent implements OnInit {
     this.project.status = this.statusList.find(item => item.id == optionID)
     console.log(this.project.status);    
     if(this.isAddMode){
-      this.projectService.postProject(this.project).subscribe(a=>console.log(a));
+      this.projectService.postProject(this.project).subscribe((response) => {
+        this.router.navigateByUrl('/');
+    },
+    (error: HttpErrorResponse) => {
+        // Handle error
+        console.log(error);
+    });
     }else{
-      this.projectService.putProject(this.project).subscribe(a=>console.log(a));
+      this.projectService.putProject(this.project).subscribe((response) => {
+        this.router.navigateByUrl('/');
+    },
+    (error: HttpErrorResponse) => {
+      console.log(error);
+    });
     }
   }
 

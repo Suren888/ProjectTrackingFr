@@ -8,8 +8,10 @@
             <input 
               [(ngModel)]="project && project.title"
               type="text" formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
-            <div  class="invalid-feedback">
-                <div>Title is required</div>
+              <div *ngIf="form.controls['title'].invalid && (form.controls['title'].dirty || form.controls['title'].touched)" class="alert alert-danger">
+                <div *ngIf="form.controls['name'].errors.required">
+                Name is required.
+              </div>
             </div>
         </div>
     </div>
